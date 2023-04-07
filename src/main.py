@@ -148,6 +148,7 @@ def stop_button():
     set_warning("Processing timelapse frames into video ...", "#e69138")
     process_video(targetdir)
     set_warning("Video exported! Check your target directory", "#6aa84f")
+    start_button.configure(state=tk.NORMAL)
     
 
 def set_warning(str, color="transparent"):
