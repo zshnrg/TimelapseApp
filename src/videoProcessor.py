@@ -12,8 +12,9 @@ def process_video(dir):
     folder_path = dir
     video_name = dir + '\Timelapse' + datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S") + '.mp4'
 
-    # Accessing all image files in the directory
-    image_files = [f for f in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, f))]
+    # Accessing image files with certain extensions in the directory
+    extensions = ('.png', '.jpeg', '.jpg')
+    image_files = [f for f in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, f)) and f.endswith(extensions)]
     image_files.sort()
 
     # Creating a video file
