@@ -9,7 +9,7 @@ import threading
 from videoProcessor import process_video
 
 customtkinter.set_appearance_mode("system")
-customtkinter.set_default_color_theme("dark-blue")
+customtkinter.set_default_color_theme("../data/theme.json")
 
 app = customtkinter.CTk()
 app.geometry("700x350")
@@ -47,7 +47,7 @@ class Stopwatch(threading.Thread):
                     print(self._stopwatch_elapsed_time)
 
                     if self._stopwatch_elapsed_time % interval == 0:
-                        pyautogui.screenshot(f"{targetdir}/screenshot-{self._count}.png")
+                        pyautogui.screenshot(f"{targetdir}/screenshot-{self._count:08d}.png")
                         print(f"Screenshot taken at {self._stopwatch_elapsed_time} seconds")
                         self._count += 1
                         frame_label.configure(text=f"Frame\t\t: {self._count}")
@@ -59,6 +59,7 @@ class Stopwatch(threading.Thread):
 
     def stop(self, app):
         elapsed_time_label.configure(text=f"Elapsed Time\t: 0:00:00")
+        frame_label.configure(text=f"Frame\t\t: 0")
         self._stopwatch_running = False
 
     def pause(self):
