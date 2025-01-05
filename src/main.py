@@ -7,6 +7,7 @@ import pyautogui
 import time
 import threading
 from videoProcessor import process_video
+import os
 
 customtkinter.set_appearance_mode("system")
 customtkinter.set_default_color_theme("../data/theme.json")
@@ -35,6 +36,19 @@ class Stopwatch(threading.Thread):
 
     def run(self):
         self._stopwatch_running = True
+        # Create temp folder for screenshots
+        tempFolder = targetdir + "/temp"
+        try:
+            os.makedirs(tempFolder)
+        except FileExistsError:
+            print("Directory already exists, delete all files in the directory")
+            for f in os.listdir(tempFolder):
+                os.remove(os.path.join(tempFolder, f))
+        except Exception as e:
+            print(e)
+            self._stopwatch_running = False
+            return
+
         while self._stopwatch_running:
             if not self._stopwatch_paused:
                 try:
@@ -47,7 +61,7 @@ class Stopwatch(threading.Thread):
                     print(self._stopwatch_elapsed_time)
 
                     if self._stopwatch_elapsed_time % interval == 0:
-                        pyautogui.screenshot(f"{targetdir}/screenshot-{self._count:08d}.png")
+                        pyautogui.screenshot(f"{tempFolder}/screenshot-{self._count:08d}.jpg")
                         print(f"Screenshot taken at {self._stopwatch_elapsed_time} seconds")
                         self._count += 1
                         frame_label.configure(text=f"Frame\t\t: {self._count}")
@@ -147,9 +161,15 @@ def stop_button():
     start_button.configure(text="Start", fg_color="#3a7ebf", hover_color="#325882", state=tk.DISABLED)
 
     set_warning("Processing timelapse frames into video ...", "#e69138")
-    process_video(targetdir)
+    process_video(targetdir, targetdir + "/temp")
     set_warning("Video exported! Check your target directory", "#6aa84f")
     start_button.configure(state=tk.NORMAL)
+
+    # Delete temp folder
+    tempFolder = targetdir + "/temp"
+    for f in os.listdir(tempFolder):
+        os.remove(os.path.join(tempFolder, f))
+    os.rmdir(tempFolder)
     
 
 def set_warning(str, color="transparent"):
