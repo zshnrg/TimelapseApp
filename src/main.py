@@ -58,18 +58,15 @@ class Stopwatch(threading.Thread):
                     minute = int((self._stopwatch_elapsed_time - hour * 3600) / 60)
                     second = int(self._stopwatch_elapsed_time - hour * 3600 - minute * 60)
                     elapsed_time_label.configure(text=f"Elapsed Time\t: {hour}:{minute:02d}:{second:02d}")
-                    print(self._stopwatch_elapsed_time)
 
                     if self._stopwatch_elapsed_time % interval == 0:
                         pyautogui.screenshot(f"{tempFolder}/screenshot-{self._count:08d}.jpg")
-                        print(f"Screenshot taken at {self._stopwatch_elapsed_time} seconds")
                         self._count += 1
                         frame_label.configure(text=f"Frame\t\t: {self._count}")
 
                 except Exception as e:
                     print(e)
                     self._stopwatch_running = False
-        print("Stopwatch stopped")
 
     def stop(self, app):
         elapsed_time_label.configure(text=f"Elapsed Time\t: 0:00:00")
@@ -141,13 +138,11 @@ def start_button():
     startState = True
     stop_button.configure(state=tk.NORMAL)
     if not pauseButton:
-        print("Start button pressed")
         stopwatch_thread.resume()
         start_button.configure(text="Pause", fg_color="red", hover_color="#802000")
         pauseButton = True
 
     else:
-        print("Pause button pressed")
         stopwatch_thread.pause()
         start_button.configure(text="Continue", fg_color="#3a7ebf", hover_color="#325882")
         pauseButton = False
